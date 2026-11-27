@@ -1,0 +1,21 @@
+/* The Power now mix card (web/js/ext/power), above the motion clock bar; loaded by ext/power and ext/money. */
+.power-card { width: 370px; max-width: 100%; padding: 7px 10px 8px; font-size: 12px; }
+.power-card[hidden] { display: none; }
+.pc-head { display: flex; align-items: baseline; gap: 6px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; }
+.pc-head b { font-family: var(--serif); font-size: 14px; color: var(--gold-bright); font-weight: normal; }
+.pc-bar { display: flex; height: 9px; border-radius: 3px; overflow: hidden; border: 1px solid rgba(0,0,0,.5); }
+.pc-bar span { display: block; min-width: 1px; }
+.pc-list { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; margin: 6px 0 0; padding: 0; list-style: none; }
+.pc-list li { display: flex; align-items: center; gap: 5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pc-list li b { margin-left: auto; font-weight: 600; color: var(--ink); }
+.pc-list i { flex: none; width: 9px; height: 9px; border-radius: 2px; border: 1px solid rgba(0,0,0,.45); }
+.pc-list .pc-net { color: var(--ink-dim); }
+
+@media (max-width: 700px) {
+  .power-card { width: auto; margin: 0 8px; padding: 5px 8px 6px; }
+  .pc-list { grid-template-columns: 1fr 1fr; gap: 1px 12px; font-size: 11px; }
+  .pc-list li:nth-child(n+5):not(.pc-net) { display: none; }
+}
+
+/* The money layer runs on the "live" axis (one year): no time to scrub. */
+.motion-bar[data-axis="live"] .mb-scrub { visibility: hidden; }

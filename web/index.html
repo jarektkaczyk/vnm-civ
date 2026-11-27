@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://eu-assets.i.posthog.com https://static.cloudflareinsights.com; connect-src 'self' https://eu.i.posthog.com https://eu-assets.i.posthog.com https://cloudflareinsights.com; img-src 'self' data: blob:; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Vietnam, the Civ way</title>
+  <meta name="description" content="Real Vietnam, the Civ way: hex terrain, the 34 provinces, towns, lenses and advisors. Every number from public data.">
+  <!-- Absolute URLs repeat SITE_URL from js/app/share.js and pipeline/build/pages.py: change them together. The Vietnamese page
+       (pages.py) swaps canonical, og:url and the locale. og-image.jpg is a 1200x630 render of the home view. -->
+  <link rel="canonical" href="https://softonsofa.com/vnm-civ/">
+  <link rel="alternate" hreflang="en" href="https://softonsofa.com/vnm-civ/">
+  <link rel="alternate" hreflang="vi" href="https://softonsofa.com/vnm-civ/vi/">
+  <link rel="alternate" hreflang="x-default" href="https://softonsofa.com/vnm-civ/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Vietnam">
+  <meta property="og:title" content="Vietnam, the Civ way">
+  <meta property="og:description" content="Real Vietnam, the Civ way: hex terrain, the 34 provinces, towns, lenses and advisors. Every number from public data.">
+  <meta property="og:url" content="https://softonsofa.com/vnm-civ/">
+  <meta property="og:image" content="https://softonsofa.com/vnm-civ/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Hex map of Vietnam with town banners">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:locale:alternate" content="vi_VN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vietnam, the Civ way">
+  <meta name="twitter:description" content="Real Vietnam, the Civ way: hex terrain, the 34 provinces, towns, lenses and advisors. Every number from public data.">
+  <meta name="twitter:image" content="https://softonsofa.com/vnm-civ/og-image.jpg">
+  <meta name="twitter:image:alt" content="Hex map of Vietnam with town banners">
+  <meta name="theme-color" content="#0f2233">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 4l24 14v28L32 60 8 46V18z' fill='%230b1a26'/%3E%3Cpath d='M32 7.5l21 12.2v24.6L32 56.5 11 44.3V19.7z' fill='%23c9a45c'/%3E%3Cpath d='M32 11l18 10.5v21L32 53 14 42.5v-21z' fill='%231d7a8c'/%3E%3Cpath d='M32 17v18l9-3.5z' fill='%23f4ecd8'/%3E%3C/svg%3E">
+  <style>
+    .text-version { position: fixed; z-index: 9; top: calc(var(--topbar-h, 40px) + 6px); left: calc(12px + var(--dock-left, 0px));
+      font: italic 12px "Palatino Linotype", Palatino, Georgia, serif; color: #b9ab88; text-decoration: none;
+      padding: 1px 7px; border-radius: 3px; background: rgba(15, 34, 51, .72); border: 1px solid rgba(201, 164, 92, .35); }
+    .text-version:hover, .text-version:focus-visible { color: #ecd08e; border-color: #c9a45c; }
+    body.dock-open .text-version { display: none; }
+    @media (max-width: 700px) { .text-version { left: auto; right: 8px; } }
+    .nojs { position: fixed; inset: 0; z-index: 60; overflow: auto; padding: 48px 20px; background: #0f2233; color: #efe4c6;
+      font: 17px/1.55 -apple-system, "Segoe UI", system-ui, sans-serif; }
+    .nojs > div { max-width: 640px; margin: 0 auto; }
+    .nojs h1 { font: normal 34px "Palatino Linotype", Palatino, Georgia, serif; color: #ecd08e; margin: 0 0 12px; }
+    .nojs a { color: #ecd08e; }
+  </style>
+  <script type="module" src="js/app/analytics.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <noscript><div class="nojs"><div>
+    <h1>Vietnam, the Civ way</h1>
+    <p>This map draws real Vietnam, the Civ way: hex terrain, the 34 provinces, towns, lenses and a council of advisors. Every number comes from public data. It needs JavaScript.</p>
+  </div></div></noscript>
+  <header id="topbar">
+    <div class="brand" title="Vietnam, the Civ way"><svg class="brand-emblem" aria-hidden="true" viewBox="0 0 64 64" width="26" height="26"><path d="M32 4l24 14v28L32 60 8 46V18z" fill="#0b1a26"/><path d="M32 7.5l21 12.2v24.6L32 56.5 11 44.3V19.7z" fill="#c9a45c"/><path d="M32 11l18 10.5v21L32 53 14 42.5v-21z" fill="#1d7a8c"/><path d="M20 40c4-2 8 2 12 0s8 2 12 0" fill="none" stroke="#f4ecd8" stroke-width="2.4" stroke-linecap="round"/><path d="M32 17v18l9-3.5z" fill="#f4ecd8"/><path d="M32 17l-8 15 8 3z" fill="#e2bf6e"/></svg><span class="brand-words"><span class="brand-text">Vietnam</span><i class="brand-tag">Vietnam, the Civ way</i></span></div>
+    <div id="yields" class="yields" aria-label="National figures"></div>
+    <div class="spacer"></div>
+    <div class="search" role="search">
+      <span class="search-ic" aria-hidden="true"></span>
+      <input id="search-input" type="search" placeholder="Search towns and provinces" autocomplete="off" spellcheck="false"
+        role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="search-results" aria-label="Search towns and provinces (/ or Ctrl K)">
+      <kbd class="search-kbd" aria-hidden="true">/</kbd>
+    </div>
+    <div id="turn" class="turn"></div>
+    <div class="tb-buttons">
+      <button id="btn-share" class="btn" aria-haspopup="dialog" aria-expanded="false" aria-label="Share this view" title="Share: copy a link or download an image"></button>
+      <button id="btn-help" class="btn btn-icon" aria-label="Keyboard and mouse help" title="Help (?)"></button>
+      <button id="btn-pedia" class="btn" aria-label="Open the Almanac" title="What every number means and where it comes from"></button>
+    </div>
+    <nav id="lang-switch" class="lang-switch" aria-label="Language"><a href="./" hreflang="en" lang="en" data-lang="en" aria-current="page">EN</a><a href="vi/" hreflang="vi" lang="vi" data-lang="vi">VI</a></nav>
+  </header>
+
+  <canvas id="map" role="img" aria-label="Hex map of Vietnam"></canvas>
+
+  <div id="tooltip" class="tooltip" hidden></div>
+  <aside id="city-panel" class="panel" hidden role="region" aria-label="Details"></aside>
+
+  <div id="lens-area">
+    <div id="lens-picker" class="panel lens-picker" hidden role="dialog" aria-label="Choose a lens"></div>
+    <div id="legend" class="panel legend" hidden role="group" aria-label="Lens legend"></div>
+    <div id="lens-dock" class="panel lens-dock" role="toolbar" aria-label="Map lenses">
+      <button id="btn-res" class="lens-btn res-toggle" aria-pressed="true" aria-label="Resources on tiles (R)" title="Show or hide resources on tiles (R)" hidden></button>
+      <div id="lens-quick" class="lens-quick"></div>
+      <button id="btn-lenses" class="lens-btn lens-more" aria-haspopup="dialog" aria-expanded="false" aria-controls="lens-picker"></button>
+    </div>
+  </div>
+
+  <div id="minimap-wrap" class="panel"><canvas id="minimap" aria-label="Minimap: click to jump" role="img"></canvas></div>
+  <button id="btn-minimap" class="panel minimap-toggle" aria-pressed="false" aria-controls="minimap-wrap" aria-label="Show the minimap"></button>
+
+  <div id="search-results" class="panel search-results" role="listbox" aria-label="Search results" hidden></div>
+  <div id="share-pop" class="panel share-pop" role="dialog" aria-label="Share" hidden></div>
+  <div id="yield-report" class="panel yield-report" role="dialog" aria-label="National report" tabindex="-1" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="announce" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="pedia" class="modal" hidden>
+    <div class="modal-card panel" role="dialog" aria-modal="true" aria-label="Almanac">
+      <button class="close icon-btn" data-close aria-label="Close the Almanac">&#x2715;</button>
+      <nav id="pedia-nav" aria-label="Almanac pages"></nav>
+      <article id="pedia-body"></article>
+    </div>
+  </div>
+
+  <div id="help" class="modal" hidden>
+    <div class="help-card panel" role="dialog" aria-modal="true" aria-labelledby="help-title"></div>
+  </div>
+
+  <div id="loading"><span class="ld-title">Vietnam</span><i>Surveying the land...</i></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# The download cache. /data (no slash) also covers a worktree's data symlink: a tracked symlink here once made
+# git delete the whole ignored cache on checkout.
+/data
+.venv/
+__pycache__/
+*.pyc
+*.part
+.DS_Store
+.claude/
+out/
+dist/
+usaciv.zip
+.worktrees/
+.playwright-mcp/
