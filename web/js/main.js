@@ -404,7 +404,10 @@ async function main() {
     cam.resize(cw, ch);
     // Keep refitting until the user has moved the map (the first layout may be tiny or hidden).
     if (!userMoved || !(cam.scale > 0)) home();
-    else updateMinScale();
+    else {
+      updateMinScale();
+      if (!cam.flight) keepSelectedInView(true); // a turned phone or a resized window keeps the city on screen
+    }
     requestDraw();
     events.emit("resize", { w: cam.w, h: cam.h, dpr });
   }
@@ -487,6 +490,29 @@ async function main() {
     cam.flyTo(x - (vx - cam.w / 2) / s, y - (vy - cam.h / 2) / s, s, ms);
     userMoved = true;
     dockFramed = false;
+    requestDraw();
+  }
+
+  // The camera centre ("at" in the address, or the view before a resize) depends on the layout: on a wide screen the
+  // panel sits on the right and the map centre lies east of the city, on a phone the sheet covers the lower half. A
+  // link or a view made on one layout and opened on the other can put the selected city under the panel or off the
+  // screen. Bring it back to the middle of the visible area, at the same scale, when it is not inside it.
+  function keepSelectedInView(instant = true) {
+    const city = state.selectedCity;
+    if (!city || city.cell == null || !(cam.scale > 0)) return;
+    const x = w.grid.cx(city.cell), y = w.grid.cy(city.cell);
+    const [sx, sy] = cam.toScreen(x, y);
+    const a = visibleArea();
+    const m = 24; // css px: a city on the very edge counts as out of view
+    if (sx >= a.x0 + m && sx <= a.x1 - m && sy >= a.y0 + m && sy <= a.y1 - m) return;
+    const vx = (a.x0 + a.x1) / 2, vy = (a.y0 + a.y1) / 2;
+    const tx = x - (vx - cam.w / 2) / cam.scale, ty = y - (vy - cam.h / 2) / cam.scale;
+    if (instant) {
+      cam.stop();
+      cam.x = tx;
+      cam.y = ty;
+      cam.clamp();
+    } else cam.flyTo(tx, ty, cam.scale, 450);
     requestDraw();
   }
 
@@ -694,6 +720,7 @@ async function main() {
           cam.y = y;
           cam.scale = s;
           cam.clamp();
+          keepSelectedInView(true); // a link shared from another screen size
         } else cam.flyTo(x, y, s, 650);
         userMoved = true;
       } else if (!initial && !city && sIdx < 0) {
