@@ -7,9 +7,11 @@ import { esc } from "../../format.js";
 import { icon, glyph as lensGlyph } from "../../ui/icon.js";
 import { hasIcon } from "../../icons.js";
 
-// Order, names and hint lines of the panel (the toggles keep their own ids in layers=).
-const layerRows = () => [
+// Order, names and hint lines of the panel (the toggles keep their own ids in layers=). Other extensions add their
+// rows to app.motion.panelRows ({id, label, hint}, id = their map toggle id), shown after these.
+const layerRows = (app) => [
   { id: "typhoons", label: t("Typhoons"), hint: t("Storm tracks year by year since 1981") },
+  ...(app?.motion?.panelRows || []),
 ];
 // lens: the lens a pick shows (its icon too); lenses: every lens that plays this time-lapse (ext/timelapse).
 const lensRows = () => [
@@ -53,7 +55,7 @@ export function installPanel(app) {
 
   function count() {
     const tg = toggles();
-    return layerRows().filter((r) => tg.get(r.id)?.on).length + (lensRows().some(lensOn) ? 1 : 0);
+    return layerRows(app).filter((r) => tg.get(r.id)?.on).length + (lensRows().some(lensOn) ? 1 : 0);
   }
 
   const row = (key, on, ig, label, hint) => `<button type="button" class="ml-row anim-row${on ? " on" : ""}" role="menuitemcheckbox"
@@ -69,7 +71,7 @@ export function installPanel(app) {
     if (pop.hidden) return;
     const focused = document.activeElement?.closest?.("[data-anim]")?.dataset.anim;
     const tg = toggles();
-    const layers = layerRows().filter((r) => tg.has(r.id));
+    const layers = layerRows(app).filter((r) => tg.has(r.id));
     const lenses = lensRows().filter(lensOk);
     pop.innerHTML =
       (layers.length ? `<div class="ml-head">${esc(t("On the map"))}</div>` +

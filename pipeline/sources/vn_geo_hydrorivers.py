@@ -14,14 +14,30 @@ PAD = 0.5
 BBOX = (VN_LON[0] - PAD, VN_LAT[0] - PAD, VN_LON[1] + PAD, VN_LAT[1] + PAD)
 
 
+# The attribution the HydroSHEDS licence (Exhibit B) requires with any product that uses the data. THIRD_PARTY_NOTICES
+# holds it with the full licence text that governs the river data.
+EXHIBIT_B = (
+    "This product vnm-civ incorporates data from the HydroSHEDS version 1 database which is \u00a9 World Wildlife "
+    "Fund, Inc. (2006-2022) and has been used herein under license. WWF has not evaluated the data as altered and "
+    "incorporated within vnm-civ, and therefore gives no warranty regarding its accuracy, completeness, currency or "
+    "suitability for any particular purpose. Portions of the HydroSHEDS v1 database incorporate data which are the "
+    "intellectual property rights of \u00a9 USGS (2006-2008), NASA (2000-2005), ESRI (1992-1998), CIAT (2004-2006), "
+    "UNEP-WCMC (1993), WWF (2004), Commonwealth of Australia (2007), and Her Royal Majesty and the British Crown and "
+    "are used under license. The HydroSHEDS v1 database and more information are available at "
+    "https://www.hydrosheds.org."
+)
+
+
 class VnGeoHydroRivers(Source):
     info = SourceInfo(
         id="vn_geo_hydrorivers",
         title="HydroRIVERS v1.0, Asia",
         publisher="WWF HydroSHEDS (Lehner and Grill 2013)",
         homepage="https://www.hydrosheds.org/products/hydrorivers",
-        license="HydroSHEDS licence agreement: free for scientific, educational and commercial use with attribution. "
-        "Lehner, B., Grill G. (2013), Global river hydrography and network routing, Hydrological Processes 27(15), "
+        license="HydroSHEDS Version 1 License Agreement. Use of the river data of this map is subject to the terms of "
+        "that License, reproduced in full in the file THIRD_PARTY_NOTICES of the map's public repository; they bind "
+        "every user of the river data. Required attribution (Exhibit B): " + EXHIBIT_B
+        + " Lehner, B., Grill G. (2013), Global river hydrography and network routing, Hydrological Processes 27(15), "
         "doi:10.1002/hyp.9740",
         description="Vector river network derived from 15 arc-second hydrography, every reach with its downstream "
         f"link, upstream catchment area and long-term mean discharge. Reaches that drain {MIN_UPLAND_KM2:,} km2 or "

@@ -7,7 +7,8 @@
 // advisors/: the council of advisors. layers/: static map layers (roads, rail, ports, airports) and their toggles.
 // coast/: today's OpenStreetMap coastline and the airport and port areas at close zoom.
 // timelapse/: lenses that play on the motion clock (night lights by year). typhoons/: typhoon tracks year by year.
-const MODULES = ["./credit/index.js", "./motion/index.js", "./advisors/index.js", "./layers/index.js", "./coast/index.js", "./timelapse/index.js", "./typhoons/index.js"];
+// energy/: power plants by year (motion layer and card), operating plants as markers (docs/ENERGY_PORT.md).
+const MODULES = ["./credit/index.js", "./motion/index.js", "./advisors/index.js", "./layers/index.js", "./coast/index.js", "./timelapse/index.js", "./typhoons/index.js", "./energy/index.js"];
 
 export async function installExtensions(app, list = MODULES) {
   const loads = list.map((spec) => import(spec).then((m) => ({ m }), (err) => ({ err })));

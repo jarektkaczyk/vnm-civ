@@ -306,6 +306,7 @@ DATA_TEXT: dict[str, list[str]] = {
     "resources.json": ["types[].name", "types[].description", "types[].unit", "rules.*", "summary.note"],
     "timelapse.json": ["rules[]"],
     "typhoons.json": ["rules[]"],
+    "energy.json": ["rules[]"],
     "coast.json": ["rules[]"],
     "hubs.json": ["rules[]"],
     "sources.json": ["[].title", "[].description", "[].publisher", "[].license", "[].vintage", "[].used_for[]",
