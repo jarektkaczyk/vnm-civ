@@ -87,9 +87,14 @@ const CSS = `
 .energy-card td { text-align: right; padding: 1px 0 1px 6px; }
 .energy-card td:first-child { text-align: left; padding-left: 0; white-space: nowrap; }
 .energy-card .ec-sw { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.energy-card { box-sizing: border-box; overflow: hidden; }
 @media (max-width: 700px) {
   .energy-card { width: auto; margin: 0 8px; padding: 5px 8px 6px; font-size: 11px; }
   .energy-card .ec-title { font-size: 13px; margin-bottom: 2px; }
+  .energy-card table { table-layout: fixed; }
+  .energy-card th:first-child, .energy-card td:first-child { width: 28%; }
+  .energy-card th { white-space: normal; vertical-align: bottom; line-height: 1.2; padding-left: 4px; }
+  .energy-card td { padding-left: 4px; }
   .energy-card td, .energy-card th { padding-top: 0; padding-bottom: 0; }
 }`;
 
@@ -218,10 +223,9 @@ export function install(app) {
         return best ? { html: tip(best) } : null;
       },
     });
-    (motion.panelRows ||= []).push({ id: "energy_plants", get label() { return S.layer; }, get hint() { return S.layerHint; } });
+    (motion.panelRows ||= []).push({ id: "energy_plants", get label() { return S.layer; }, hint: "" });
     app.ui.addMapToggle({
       id: "energy_plants", label: S.layer, icon: "r-solar", default: false, menu: !Array.isArray(motion.panelRows),
-      title: S.layerHint,
       get: () => motionOn,
       set: (v) => {
         motionOn = !!v;
@@ -244,6 +248,8 @@ export function install(app) {
   const minMw = (Rpx) => (Rpx < 5 ? 400 : Rpx < 9 ? 100 : Rpx < 16 ? 30 : Rpx < 30 ? 5 : 0);
   const sizePx = (mw, Rpx) => Math.min(26, Math.max(10, 9 + 2.6 * Math.log10(Math.max(1, mw)) + Math.min(6, Rpx / 8)));
   let shown = [];
+  // Never a plant twice: the dots of "Power plants by year" stand for the operating plants while that layer is on.
+  const markersShown = () => markersOn && !motionOn && markers.length > 0;
   function visibleMarkers(vp, Rpx) {
     const lim = minMw(Rpx), s = vp.s, placed = [], out = [];
     for (const r of markers) { // largest first
@@ -259,8 +265,8 @@ export function install(app) {
   }
   app.registerStaticLayer({
     id: "energy_markers", z: MARKER_Z,
-    visible: () => markersOn && markers.length > 0,
-    sig: () => `${markersOn}|${markers.length}`,
+    visible: () => markersShown(),
+    sig: () => `${markersShown()}|${markers.length}`,
     draw(ctx, vp, w, o) {
       const Rpx = o.Rpx ?? vp.s * w.grid.R;
       shown = visibleMarkers(vp, Rpx);
@@ -283,6 +289,7 @@ export function install(app) {
       }
     },
     hit(x, y, Rpx) {
+      if (!markersShown()) return null;
       const s = Rpx / app.w.grid.R;
       for (const it of shown) {
         const rad = (it.size / 2) * 0.85 / s;

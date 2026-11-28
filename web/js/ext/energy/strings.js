@@ -16,7 +16,6 @@ export const TECH_LABEL = {
 
 export const S = {
   get layer() { return t("Power plants by year"); },
-  get layerHint() { return t("Plants appear in the year they started"); },
   get markers() { return t("Power plants"); },
   get markersHint() { return t("Operating power plants"); },
   get capacity() { return t("Capacity"); },

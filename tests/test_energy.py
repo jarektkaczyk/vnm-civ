@@ -351,6 +351,38 @@ class Plants(unittest.TestCase):
         out = energy.merge([("energy_gem", [cm]), ("energy_osm", [wri])])
         self.assertEqual([(p["id"], p["mw"]) for p in out], [("gem:L9", 1600.0)])
 
+    def test_numbered_plants_that_share_an_alias_stay_apart(self):
+        # An alias of several plants is the identity of none, so numbered neighbours do not merge through it.
+        def rec(i, name, alias, mw, lat):
+            return {"id": f"gem:{i}", "tech": "biomass", "name": name, "aliases": [alias], "mw": mw, "start": None, "status": "operating", "lat": lat, "lon": 101.5}
+        a = rec(1, "National Power Plant 5 power station", "304-Ip", 37.0, 13.90)
+        b = rec(2, "National Power Plant 6 power station", "304-Ip", 37.0, 13.91)
+        self.assertEqual(len(energy.merge([("energy_gem", [a, b])])), 2)
+        e = rec(3, "Kampaengsaen East power station", "Thailand MWE", 8.0, 14.0)
+        w = rec(4, "Kamphaengsaen West power station", "Thailand MWE", 8.0, 14.003)
+        self.assertEqual(len(energy.merge([("energy_gem", [e, w])])), 2)
+        # The same alias on records of one source does not join their numbered plants either.
+        o1 = {"id": "osm:1", "tech": "gas", "name": "Amata B.Grimm Power Plant 1 & 2", "aliases": ["amata bgrimm power limited"], "mw": 337.0, "status": "operating", "start": None, "lat": 13.5, "lon": 101.0}
+        o2 = {"id": "osm:2", "tech": "gas", "name": "Amata B.Grimm Power Plant 3", "aliases": ["amata bgrimm power limited"], "mw": 133.0, "status": "operating", "start": None, "lat": 13.51, "lon": 101.0}
+        self.assertEqual(len(energy.merge([("energy_osm", [o1, o2])])), 2)
+        # A plant keeps its own alias as a name when no other record has it.
+        g = {"id": "gem:5", "tech": "gas", "name": "Chiang Rak Noi power station", "aliases": ["Gulf CRN power station"], "mw": 126.0, "start": 2013, "status": "operating", "lat": 14.1, "lon": 100.7}
+        o = {"id": "osm:5", "tech": "gas", "name": "Gulf CRN power station", "mw": None, "start": None, "status": "operating", "lat": 14.1, "lon": 100.7}
+        self.assertEqual(len(energy.merge([("energy_gem", [g]), ("energy_osm", [o])])), 1)
+
+    def test_alias_that_is_also_a_name_still_joins(self):
+        # Both records carry "Ras Laffan C" as an alias and a third record has it as its name: it is one plant.
+        g = {"id": "gem:1", "tech": "gas", "name": "Ras Laffan C power plant", "aliases": ["Ras Laffan C power and desalination plant"], "mw": 2732.0, "start": 2011, "status": "operating", "lat": 25.93, "lon": 51.52}
+        o = {"id": "osm:1", "tech": "gas", "name": "Ras Girtas Power Station", "aliases": ["Ras Laffan 'C' Power Plant"], "mw": 2730.0, "start": None, "status": "operating", "lat": 25.937, "lon": 51.522}
+        self.assertEqual(len(energy.merge([("energy_gem", [g]), ("energy_osm", [o])])), 1)
+
+    def test_alias_without_numbers_takes_the_numbers_of_the_name(self):
+        p = {"name": "Amata B.Grimm Power Plant 4 & 5", "aliases": ["amata bgrimm power limited"]}
+        q = {"name": "Amata B.Grimm Power Plant 1 & 2", "aliases": ["amata bgrimm power limited"]}
+        self.assertEqual(energy.name_match(p, q), 0.0)
+        # An alias that is a plant's real name still joins it.
+        self.assertEqual(energy.name_match({"name": "Foo 2", "aliases": ["Bar"]}, {"name": "Bar 2"}), 1.0)
+
     def test_urdu_generic_words(self):
         tarbela = "\u062a\u0631\u0628\u06cc\u0644\u0627 \u067e\u0646 \u0628\u062c\u0644\u06cc \u06af\u06be\u0631"
         self.assertEqual(energy.name_key(tarbela), ("\u062a\u0631\u0628\u06cc\u0644\u0627", frozenset()))

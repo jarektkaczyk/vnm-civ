@@ -181,17 +181,36 @@ def alias_ok(text: str) -> bool:
     return not latin or any(w[0].isupper() for w in latin)
 
 
+_SHARED: set = set()  # alias keys that two or more records carry (set by merge): not the identity of any plant
+
+
+def _texts(p: dict) -> list[tuple[str, bool]]:
+    """(text, is_alias) of the names of a record: name, English name, local name, then the aliases (GEM `aliases`, OSM
+    other names) that no other record carries. An alias of several plants names none of them."""
+    out = [(str(t), False) for t in (p.get("name"), p.get("name_en"), p.get("name_local")) if t]
+    for a in p.get("aliases") or ():
+        if a and name_key(str(a)) not in _SHARED:
+            out.append((str(a), True))
+    return out
+
+
 def names_of(p: dict) -> list[tuple[str, frozenset]]:
     """The name keys of a plant: its name, English name, local name and other names (GEM `aliases`). For
     "Suoi Vang (Ankroet)" also the part outside the brackets, and the part inside when alias_ok()."""
     out = []
-    texts = [p.get("name"), p.get("name_en"), p.get("name_local"), *(p.get("aliases") or ())]
-    for text in (str(t) for t in texts if t):
+    own = None  # the numbers of the plant's own name: an alias without numbers takes them
+    for text, is_alias in _texts(p):
         parts = [text]
         if "(" in text:
             parts.append(re.sub(r"\([^()]*\)", " ", text))
             parts += [b for b in re.findall(r"\(([^()]*)\)", text) if alias_ok(b)]
-        out += [k for k in map(name_key, parts) if k and k not in out]
+        for k in map(name_key, parts):
+            if k and own is None and not is_alias:
+                own = k[1]
+            if k and is_alias and not k[1] and own:
+                k = (k[0], own)  # an alias without numbers is the same units as the name it belongs to
+            if k and k not in out:
+                out.append(k)
     return out
 
 
@@ -222,8 +241,7 @@ def name_match(a: dict, b: dict) -> float | None:
 
 
 def words_of(p: dict) -> list[tuple[tuple[str, ...], frozenset]]:
-    texts = [p.get("name"), p.get("name_en"), p.get("name_local"), *(p.get("aliases") or ())]
-    return [w for w in (name_words(re.sub(r"\([^()]*\)", " ", str(t))) for t in texts if t) if w]
+    return [w for w in (name_words(re.sub(r"\([^()]*\)", " ", t)) for t, _alias in _texts(p)) if w]
 
 
 def subset_match(a: dict, b: dict) -> bool:
@@ -329,7 +347,20 @@ def merge(lists: list[tuple[str, list[dict]]], log: list | None = None) -> list[
       "Phu My 4"; OSM "Loc Ninh 1-2-3" is GEM "Loc Ninh 1", "Loc Ninh 2" and "Loc Ninh 3"). Planned plants count:
       an OSM wind farm of 241 MW is a GEM farm of 99 MW and its 141 MW extension in construction.
     Planned plants (GEM) are dropped at the end, with the records they took.
+    An alias that two or more records carry is no plant's name, unless it is the name of a record; an alias without
+    numbers takes the numbers of its plant's own name.
     `log`, when given, gets one (source, name, kept source, kept name, name similarity or None, km, kind) per merge."""
+    global _SHARED
+    carriers: dict[tuple, set] = defaultdict(set)
+    named: set = set()  # keys that are the name of a record: the identity of a plant, whoever carries them as an alias
+    for _src, points in lists:
+        for p in points:
+            named |= {k for k in (name_key(str(t)) for t in (p.get("name"), p.get("name_en"), p.get("name_local")) if t) if k}
+            for a in p.get("aliases") or ():
+                k = name_key(str(a)) if a else None
+                if k:
+                    carriers[k].add(p["id"])
+    _SHARED = {k for k, ids in carriers.items() if len(ids) > 1 and k not in named}
     kept: list[dict] = []
     buckets: dict[tuple, list[dict]] = defaultdict(list)
     by_name: dict[tuple, list[dict]] = defaultdict(list)
